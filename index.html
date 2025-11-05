@@ -47,12 +47,18 @@
             font-family:var(--mono-font);
             -webkit-font-smoothing:antialiased;
             -moz-osx-font-smoothing:grayscale;
-            padding:24px;
+            padding:12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+        }
+        
+        @media (min-width: 640px) {
+            body {
+                padding: 24px;
+            }
         }
 
         /* Custom styles for feedback animations */
@@ -91,7 +97,7 @@
         /* Footer styles */
         .footer {
             margin-top: 2rem;
-            padding: 1.5rem;
+            padding: 1rem;
             background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
             border: 1px solid var(--border);
             border-radius: var(--radius);
@@ -99,32 +105,53 @@
             max-width: 42rem;
             width: 100%;
         }
+        @media (min-width: 640px) {
+            .footer {
+                padding: 1.5rem;
+            }
+        }
         .footer h3 {
             font-family: var(--serif-font);
             font-weight: 600;
             margin: 0 0 1rem 0;
-            font-size: 1.125rem;
+            font-size: 1rem;
             color: var(--text-100);
+        }
+        @media (min-width: 640px) {
+            .footer h3 {
+                font-size: 1.125rem;
+            }
         }
         .social-links {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.5rem;
             margin-top: 0.75rem;
+        }
+        @media (min-width: 640px) {
+            .social-links {
+                gap: 1rem;
+            }
         }
         .social-link {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            padding: 0.5rem 1rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 8px;
             background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
             border: 1px solid var(--border);
             color: var(--text-100);
             text-decoration: none;
-            font-size: 0.875rem;
+            font-size: 0.813rem;
             transition: all 0.2s ease;
+        }
+        @media (min-width: 640px) {
+            .social-link {
+                padding: 0.5rem 1rem;
+                font-size: 0.875rem;
+            }
         }
         .social-link:hover {
             background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
@@ -135,28 +162,28 @@
 </head>
 <body>
 
-    <main class="max-w-2xl w-full p-6 sm:p-8 rounded-xl transition-all" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
+    <main class="max-w-2xl w-full p-4 sm:p-6 md:p-8 rounded-xl transition-all" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
 
         <!-- 1. Upload Container -->
         <div id="upload-container">
-            <h1 class="text-3xl font-bold text-center mb-4" style="color: var(--text-100); font-family: var(--serif-font);">CSV Quizzer</h1>
-            <p class="text-center mb-2" style="color: var(--text-80);">
+            <h1 class="text-2xl sm:text-3xl font-bold text-center mb-3 sm:mb-4" style="color: var(--text-100); font-family: var(--serif-font);">CSV Quizzer</h1>
+            <p class="text-center mb-2 text-sm sm:text-base" style="color: var(--text-80);">
                 Upload your quiz file to begin.
             </p>
-            <p class="text-center text-xs mb-6 p-2 rounded-md" style="color: var(--text-80); background: rgba(255,255,255,0.01); border: 1px solid var(--border);">
+            <p class="text-center text-xs mb-4 sm:mb-6 p-2 rounded-md" style="color: var(--text-80); background: rgba(255,255,255,0.01); border: 1px solid var(--border);">
                 <strong>Format:</strong> Each line must have 6 columns:
                 <br>
-                <code>Question,OptionA,OptionB,OptionC,OptionD,CorrectAnswerText</code>
+                <code style="font-size: 0.7rem;">Question,OptionA,OptionB,OptionC,OptionD,CorrectAnswerText</code>
                 <br>
-                (Fields should not contain commas)
+                <span class="text-xs">(Fields should not contain commas)</span>
             </p>
             <div class="space-y-4">
                 <input type="file" id="csv-file" accept=".csv" class="block w-full text-sm
-                    file:mr-4 file:py-2 file:px-4
+                    file:mr-2 file:py-2 file:px-3
                     file:rounded-lg file:border-0
                     file:text-sm file:font-semibold
                     transition-all" style="color: var(--text-80); background: var(--bg-700); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem;" />
-                <button id="start-button" disabled class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border);">
+                <button id="start-button" disabled class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border);">
                     Start Quiz
                 </button>
             </div>
@@ -165,8 +192,8 @@
         <!-- 2. Quiz Container -->
         <div id="quiz-container" class="hidden">
             <!-- Stats Bar -->
-            <div class="p-4 rounded-lg mb-6 text-sm" style="background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100);">
-                <div class="flex flex-wrap justify-between items-center gap-4">
+            <div class="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-xs sm:text-sm" style="background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100);">
+                <div class="flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center gap-2 sm:gap-4">
                     <span class="font-medium">
                         Question: <span id="question-number" class="font-bold" style="color: #60a5fa;">1</span> / <span id="total-questions" class="font-bold">0</span>
                     </span>
@@ -177,38 +204,38 @@
                         Checkpoint: Q<span id="checkpoint-marker" class="font-bold">1</span>
                     </span>
                 </div>
-                <div class="mt-3 pt-3 flex justify-center gap-6" style="border-top: 1px solid var(--border);">
+                <div class="mt-2 sm:mt-3 pt-2 sm:pt-3 flex justify-center gap-4 sm:gap-6" style="border-top: 1px solid var(--border);">
                     <span class="font-medium">Correct: <span id="correct-count" class="font-bold" style="color: #4ade80;">0</span></span>
                     <span class="font-medium">Wrong: <span id="wrong-count" class="font-bold" style="color: #f87171;">0</span></span>
                 </div>
             </div>
 
             <!-- Question and Answers -->
-            <div id="question-text" class="text-xl sm:text-2xl font-semibold mb-6 min-h-[4rem]" style="color: var(--text-100); font-family: var(--serif-font);">
+            <div id="question-text" class="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6 min-h-[3rem] sm:min-h-[4rem]" style="color: var(--text-100); font-family: var(--serif-font);">
                 <!-- Question text loads here -->
             </div>
-            <div id="answers-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div id="answers-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <!-- Answer buttons load here -->
             </div>
 
             <!-- Feedback Message -->
-            <div id="feedback-message" class="feedback text-center text-lg font-medium mt-4">
+            <div id="feedback-message" class="feedback text-center text-base sm:text-lg font-medium mt-4">
                 <!-- Feedback appears here -->
             </div>
         </div>
 
         <!-- 3. Results Container -->
         <div id="results-container" class="hidden text-center">
-            <h1 class="text-3xl font-bold mb-4" style="color: var(--text-100); font-family: var(--serif-font);">Quiz Complete!</h1>
-            <p class="text-xl mb-8" style="color: var(--text-80);">
+            <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style="color: var(--text-100); font-family: var(--serif-font);">Quiz Complete!</h1>
+            <p class="text-lg sm:text-xl mb-6 sm:mb-8" style="color: var(--text-80);">
                 You got <span id="final-correct" class="font-bold" style="color: #4ade80;">0</span> right
                 and <span id="final-wrong" class="font-bold" style="color: #f87171;">0</span> wrong.
             </p>
-            <div class="space-y-4">
-                <button id="restart-button" class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border);">
+            <div class="space-y-3 sm:space-y-4">
+                <button id="restart-button" class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border);">
                     Start Over
                 </button>
-                <button id="new-file-button" class="w-full py-3 px-6 rounded-lg font-semibold text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--bg-600), var(--bg-500)); color: var(--text-100); border: 1px solid var(--border);">
+                <button id="new-file-button" class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--bg-600), var(--bg-500)); color: var(--text-100); border: 1px solid var(--border);">
                     Upload New File
                 </button>
             </div>
@@ -390,8 +417,8 @@
             answersGrid.innerHTML = ''; // Clear old buttons
             shuffledOptions.forEach(option => {
                 const button = document.createElement('button');
-                button.className = 'answer-btn w-full py-4 px-5 rounded-lg text-left text-lg focus:outline-none transition-all';
-                button.style.cssText = 'background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100);';
+                button.className = 'answer-btn w-full py-3 sm:py-4 px-4 sm:px-5 rounded-lg text-left text-base sm:text-lg focus:outline-none transition-all';
+                button.style.cssText = 'background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100); min-height: 48px;';
                 button.textContent = option;
                 button.dataset.answer = option; // Store the answer text
                 
