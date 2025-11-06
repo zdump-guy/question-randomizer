@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Question Randomizer</title>
     
-    <!-- Favicons -->
     <link rel="icon" type="image/x-icon" href="favicon/favicon.ico">
     <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg">
     <link rel="icon" type="image/png" sizes="96x96" href="favicon/favicon-96x96.png">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="manifest" href="favicon/site.webmanifest">
     
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Slab:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root{
-            /* Core palette (dimmed, monochrome) */
-            --bg-900: #0f0f10; /* page background */
+            --bg-900: #0f0f10;
             --bg-800: #141416;
             --bg-700: #1a1a1a;
             --bg-600: #222224;
@@ -27,10 +23,10 @@
             --muted-400: #3a3a3a;
             --muted-300: #4a4a4a;
             --muted-200: #5b5b5b;
-            --text-100: #e6e6e6; /* main text */
-            --text-80: #cfcfcf;   /* secondary text */
-            --accent-1: #6b7175;  /* very dim cool gray accent */
-            --accent-2: #505356;  /* darker accent */
+            --text-100: #e6e6e6;
+            --text-80: #cfcfcf;
+            --accent-1: #6b7175;
+            --accent-2: #505356;
             --glass: rgba(255,255,255,0.03);
             --border: rgba(255,255,255,0.06);
             --radius: 12px;
@@ -61,22 +57,21 @@
             }
         }
 
-        /* Custom styles for feedback animations */
+
         .feedback {
             transition: all 0.3s ease-in-out;
             opacity: 0;
             transform: translateY(10px);
-            height: 2rem; /* Reserve space */
+            height: 2rem;
         }
         .feedback.show {
             opacity: 1;
             transform: translateY(0);
         }
-        .feedback.correct { color: #4ade80; } /* green */
-        .feedback.wrong { color: #f87171; } /* red */
-        .feedback.checkpoint { color: #60a5fa; } /* blue */
+        .feedback.correct { color: #4ade80; }
+        .feedback.wrong { color: #f87171; }
+        .feedback.checkpoint { color: #60a5fa; }
 
-        /* Custom styles for answer buttons */
         .answer-btn.correct {
             background: linear-gradient(180deg, rgba(74, 222, 128, 0.15), rgba(74, 222, 128, 0.1));
             border-color: #4ade80;
@@ -94,7 +89,6 @@
             cursor: not-allowed;
         }
 
-        /* Footer styles */
         .footer {
             margin-top: 2rem;
             padding: 1rem;
@@ -164,7 +158,6 @@
 
     <main class="max-w-2xl w-full p-4 sm:p-6 md:p-8 rounded-xl transition-all" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
 
-        <!-- 1. Upload Container -->
         <div id="upload-container">
             <h1 class="text-2xl sm:text-3xl font-bold text-center mb-3 sm:mb-4" style="color: var(--text-100); font-family: var(--serif-font);">CSV Quizzer</h1>
             <p class="text-center mb-2 text-sm sm:text-base" style="color: var(--text-80);">
@@ -194,9 +187,7 @@
             </div>
         </div>
 
-        <!-- 2. Quiz Container -->
         <div id="quiz-container" class="hidden">
-            <!-- Stats Bar -->
             <div class="p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 text-xs sm:text-sm" style="background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100);">
                 <div class="flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center gap-2 sm:gap-4">
                     <span class="font-medium">
@@ -215,21 +206,15 @@
                 </div>
             </div>
 
-            <!-- Question and Answers -->
             <div id="question-text" class="text-lg sm:text-xl md:text-2xl font-semibold mb-4 sm:mb-6 min-h-[3rem] sm:min-h-[4rem]" style="color: var(--text-100); font-family: var(--serif-font);">
-                <!-- Question text loads here -->
             </div>
             <div id="answers-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <!-- Answer buttons load here -->
             </div>
 
-            <!-- Feedback Message -->
             <div id="feedback-message" class="feedback text-center text-base sm:text-lg font-medium mt-4">
-                <!-- Feedback appears here -->
             </div>
         </div>
 
-        <!-- 3. Results Container -->
         <div id="results-container" class="hidden text-center">
             <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style="color: var(--text-100); font-family: var(--serif-font);">Quiz Complete!</h1>
             <p class="text-lg sm:text-xl mb-6 sm:mb-8" style="color: var(--text-80);">
@@ -248,7 +233,6 @@
 
     </main>
 
-    <!-- Files Modal -->
     <div id="files-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4" style="background: rgba(0,0,0,0.8);">
         <div class="max-w-md w-full p-4 sm:p-6 rounded-xl" style="background: linear-gradient(180deg, var(--bg-700), var(--bg-800)); border: 1px solid var(--border); max-height: 90vh; overflow-y: auto;">
             <div class="flex justify-between items-center mb-4">
@@ -257,7 +241,6 @@
             </div>
             
             <div class="space-y-4">
-                <!-- IS File -->
                 <div class="p-3 sm:p-4 rounded-lg" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
                     <h3 class="font-semibold mb-3 text-sm sm:text-base" style="color: var(--text-100);">Foundation of Information Systems</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
@@ -270,7 +253,6 @@
                     </div>
                 </div>
                 
-                <!-- OS File -->
                 <div class="p-3 sm:p-4 rounded-lg" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
                     <h3 class="font-semibold mb-3 text-sm sm:text-base" style="color: var(--text-100);">Operating Systems</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
@@ -283,7 +265,6 @@
                     </div>
                 </div>
                 
-                <!-- Network File -->
                 <div class="p-3 sm:p-4 rounded-lg" style="background: rgba(255,255,255,0.02); border: 1px solid var(--border);">
                     <h3 class="font-semibold mb-3 text-sm sm:text-base" style="color: var(--text-100);">Computer Network</h3>
                     <div class="flex flex-col sm:flex-row gap-2">
@@ -331,7 +312,6 @@
     </footer>
 
     <script>
-        // DOM Elements
         const uploadContainer = document.getElementById('upload-container');
         const quizContainer = document.getElementById('quiz-container');
         const resultsContainer = document.getElementById('results-container');
@@ -355,14 +335,12 @@
         const finalCorrectSpan = document.getElementById('final-correct');
         const finalWrongSpan = document.getElementById('final-wrong');
 
-        // Modal elements
         const showFilesBtn = document.getElementById('show-files-btn');
         const filesModal = document.getElementById('files-modal');
         const closeModalBtn = document.getElementById('close-modal-btn');
         const autoAddButtons = document.querySelectorAll('.auto-add-btn');
 
-        // Quiz State
-        let allQuestions = []; // Stores the parsed { question, options, correct } objects
+        let allQuestions = [];
         let shuffledQuestions = [];
         let currentQuestionIndex = 0;
         let checkpointIndex = 0;
@@ -371,7 +349,6 @@
         let totalWrong = 0;
         let feedbackTimeout;
 
-        // --- Event Listeners ---
 
         csvFileInput.addEventListener('change', handleFile);
         startButton.addEventListener('click', startQuiz);
@@ -379,7 +356,6 @@
         restartButton.addEventListener('click', startQuiz);
         newFileButton.addEventListener('click', resetToUpload);
 
-        // Modal event listeners
         showFilesBtn.addEventListener('click', () => {
             filesModal.classList.remove('hidden');
         });
@@ -394,7 +370,6 @@
             }
         });
 
-        // Auto-add button listeners
         autoAddButtons.forEach(btn => {
             btn.addEventListener('click', async () => {
                 const filePath = btn.dataset.file;
@@ -403,7 +378,6 @@
             });
         });
 
-        // --- File Handling ---
 
         async function loadCSVFile(filePath) {
             try {
@@ -426,7 +400,6 @@
             };
             reader.readAsText(file);
             
-            // Update button styling when enabled
             startButton.disabled = false;
             startButton.style.cssText = 'background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border); cursor: pointer;';
         }
@@ -436,7 +409,6 @@
             const lines = csvText.split('\n').filter(line => line.trim() !== '');
 
             for (const line of lines) {
-                // Simple CSV parse, assumes no commas in fields
                 const parts = line.split(',');
 
                 if (parts.length === 6) {
@@ -464,62 +436,49 @@
             }
         }
 
-        // --- Quiz Logic ---
 
         function startQuiz() {
-            // 1. Reset state
             currentQuestionIndex = 0;
             checkpointIndex = 0;
             consecutiveStreak = 0;
             totalCorrect = 0;
             totalWrong = 0;
 
-            // 2. Shuffle questions (Fisher-Yates shuffle)
             shuffledQuestions = shuffleArray([...allQuestions]);
 
-            // 3. Update UI
             totalQuestionsSpan.textContent = shuffledQuestions.length;
             updateStats();
             
-            // 4. Show/Hide Containers
             uploadContainer.classList.add('hidden');
             resultsContainer.classList.add('hidden');
             quizContainer.classList.remove('hidden');
 
-            // 5. Display first question
             displayQuestion();
         }
 
         function displayQuestion() {
-            // Check for quiz end
             if (currentQuestionIndex >= shuffledQuestions.length) {
                 endQuiz();
                 return;
             }
 
-            // Clear old feedback
             showFeedback('', null);
 
-            // Get current question
             const q = shuffledQuestions[currentQuestionIndex];
             const correctAnswer = q.correct;
-            // Randomize the order of answers
             const shuffledOptions = shuffleArray([...q.options]);
 
-            // Update UI text
             questionText.textContent = q.question;
             questionNumberSpan.textContent = currentQuestionIndex + 1;
 
-            // Create answer buttons
-            answersGrid.innerHTML = ''; // Clear old buttons
+            answersGrid.innerHTML = '';
             shuffledOptions.forEach(option => {
                 const button = document.createElement('button');
                 button.className = 'answer-btn w-full py-3 sm:py-4 px-4 sm:px-5 rounded-lg text-left text-base sm:text-lg focus:outline-none transition-all';
                 button.style.cssText = 'background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100); min-height: 48px;';
                 button.textContent = option;
-                button.dataset.answer = option; // Store the answer text
+                button.dataset.answer = option;
                 
-                // Mark the correct button for checking
                 if (option === correctAnswer) {
                     button.dataset.correct = 'true';
                 }
@@ -529,17 +488,15 @@
         }
 
         function handleAnswer(e) {
-            // Use event delegation
             if (!e.target.classList.contains('answer-btn')) return;
 
-            // Disable all buttons to prevent double-clicking
             document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
 
             const selectedBtn = e.target;
             const isCorrect = selectedBtn.dataset.correct === 'true';
 
             let nextQuestionIndex = currentQuestionIndex;
-            let feedbackDelay = 1500; // 1.5 seconds
+            let feedbackDelay = 1500;
 
             if (isCorrect) {
                 selectedBtn.classList.add('correct');
@@ -547,11 +504,9 @@
                 consecutiveStreak++;
                 showFeedback('Correct!', 'correct');
 
-                // Checkpoint logic
                 if (consecutiveStreak === 5) {
                     checkpointIndex = currentQuestionIndex + 1;
                     consecutiveStreak = 0; // Reset streak
-                    // Show checkpoint message after "Correct!"
                     setTimeout(() => showFeedback(`Checkpoint Reached! Progress saved at Q${checkpointIndex + 1}`, 'checkpoint'), 750);
                 }
                 
@@ -561,21 +516,19 @@
                 selectedBtn.classList.add('wrong');
                 totalWrong++;
                 consecutiveStreak = 0;
-                feedbackDelay = 3000; // 3 seconds, more time to see error
+                feedbackDelay = 3000;
 
-                // Highlight the correct answer
                 const correctBtn = answersGrid.querySelector('[data-correct="true"]');
                 if (correctBtn) {
                     correctBtn.classList.add('correct');
                 }
 
                 showFeedback(`Wrong! Returning to checkpoint (Q${checkpointIndex + 1})`, 'wrong');
-                nextQuestionIndex = checkpointIndex; // Go back to checkpoint
+                nextQuestionIndex = checkpointIndex;
             }
 
             updateStats();
 
-            // Go to the next question (or checkpoint) after a delay
             setTimeout(() => {
                 currentQuestionIndex = nextQuestionIndex;
                 displayQuestion();
@@ -590,7 +543,6 @@
             finalWrongSpan.textContent = totalWrong;
         }
 
-        // --- UI & Utility Functions ---
 
         function updateStats() {
             streakCounterSpan.textContent = consecutiveStreak;
@@ -606,7 +558,6 @@
             feedbackMessage.className = `feedback ${type || ''}`;
             
             if (message) {
-                // Force reflow to restart animation
                 void feedbackMessage.offsetWidth; 
                 feedbackMessage.classList.add('show');
             }
@@ -616,7 +567,6 @@
             resultsContainer.classList.add('hidden');
             uploadContainer.classList.remove('hidden');
             
-            // Reset file input and state
             allQuestions = [];
             csvFileInput.value = '';
             startButton.disabled = true;
