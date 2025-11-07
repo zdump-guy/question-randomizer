@@ -761,7 +761,7 @@
                 }
 
                 // Show skip button after 4 attempts
-                if (currentAttempts >= 4) {
+                if (currentAttempts >= 3) {
                     skipContainer.classList.remove('hidden');
                     showFeedback(`Wrong! You can skip this question or try again.`, 'wrong');
                     nextQuestionIndex = currentQuestionIndex; // Stay on same question
