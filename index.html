@@ -152,9 +152,84 @@
             border-color: var(--muted-300);
             transform: translateY(-2px);
         }
+
+        /* Ready Modal Styles */
+        .ready-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(8px);
+        }
+        .ready-modal.hidden {
+            display: none;
+        }
+        .ready-modal-content {
+            background: linear-gradient(180deg, var(--bg-700), var(--bg-800));
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        .ready-modal h2 {
+            font-family: var(--serif-font);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-100);
+            margin: 0 0 1.5rem 0;
+        }
+        .ready-modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .ready-modal-btn {
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+        }
+        .ready-modal-btn.yes {
+            background: linear-gradient(180deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.15));
+            color: #4ade80;
+            border-color: #4ade80;
+        }
+        .ready-modal-btn.yes:hover {
+            background: linear-gradient(180deg, rgba(74, 222, 128, 0.3), rgba(74, 222, 128, 0.25));
+            transform: translateY(-2px);
+        }
+        .ready-modal-btn.no {
+            background: linear-gradient(180deg, rgba(248, 113, 113, 0.2), rgba(248, 113, 113, 0.15));
+            color: #f87171;
+            border-color: #f87171;
+        }
+        .ready-modal-btn.no:hover {
+            background: linear-gradient(180deg, rgba(248, 113, 113, 0.3), rgba(248, 113, 113, 0.25));
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
+
+    <!-- Ready Modal -->
+    <div id="ready-modal" class="ready-modal">
+        <div class="ready-modal-content">
+            <h2>Are You Ready?</h2>
+            <div class="ready-modal-buttons">
+                <button id="ready-yes-btn" class="ready-modal-btn yes">Yes</button>
+                <button id="ready-no-btn" class="ready-modal-btn no">No</button>
+            </div>
+        </div>
+    </div>
 
     <main class="max-w-2xl w-full p-4 sm:p-6 md:p-8 rounded-xl transition-all" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
 
@@ -289,6 +364,20 @@
         </div>
     </div>
 
+    <!-- Audio Elements -->
+    <audio id="opening-sound" preload="auto">
+        <source src="sound-effects/opening.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="correct-sound" preload="auto">
+        <source src="sound-effects/correct.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="wrong-sound" preload="auto">
+        <source src="sound-effects/wrong.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="checkpoint-sound" preload="auto">
+        <source src="sound-effects/checkpoint.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Footer -->
     <footer class="footer">
         <h3>Developed and Published By One Voxel</h3>
@@ -333,6 +422,12 @@
         const skipButton = document.getElementById('skip-button');
         const skipContainer = document.getElementById('skip-container');
 
+        // Audio elements
+        const openingSound = document.getElementById('opening-sound');
+        const correctSound = document.getElementById('correct-sound');
+        const wrongSound = document.getElementById('wrong-sound');
+        const checkpointSound = document.getElementById('checkpoint-sound');
+
         const questionNumberSpan = document.getElementById('question-number');
         const totalQuestionsSpan = document.getElementById('total-questions');
         const streakCounterSpan = document.getElementById('streak-counter');
@@ -352,6 +447,10 @@
         const closeModalBtn = document.getElementById('close-modal-btn');
         const autoAddButtons = document.querySelectorAll('.auto-add-btn');
 
+        const readyModal = document.getElementById('ready-modal');
+        const readyYesBtn = document.getElementById('ready-yes-btn');
+        const readyNoBtn = document.getElementById('ready-no-btn');
+
         let allQuestions = [];
         let shuffledQuestions = [];
         let currentQuestionIndex = 0;
@@ -363,6 +462,37 @@
         let questionAttempts = {};
         let wrongQuestions = [];
         let isReviewMode = false;
+
+        // Handle Ready Modal
+        readyYesBtn.addEventListener('click', () => {
+            readyModal.classList.add('hidden');
+            playSound(openingSound);
+        });
+
+        readyNoBtn.addEventListener('click', () => {
+            window.close();
+            // If window.close() doesn't work (modern browsers often block it),
+            // redirect to about:blank or show a message
+            setTimeout(() => {
+                window.location.href = 'about:blank';
+            }, 100);
+        });
+
+        // Show ready modal on page load
+        window.addEventListener('load', () => {
+            readyModal.classList.remove('hidden');
+        });
+
+        // Function to play sound
+        function playSound(audioElement) {
+            if (audioElement) {
+                audioElement.currentTime = 0;
+                audioElement.play().catch(err => {
+                    // Handle autoplay restrictions - sounds will play after user interaction
+                    console.log('Sound playback prevented:', err);
+                });
+            }
+        }
 
 
         csvFileInput.addEventListener('change', handleFile);
@@ -560,6 +690,9 @@
                 totalCorrect++;
                 consecutiveStreak++;
                 
+                // Play correct sound
+                playSound(correctSound);
+                
                 // Clear attempts for this question when answered correctly
                 if (questionAttempts[questionKey]) {
                     delete questionAttempts[questionKey];
@@ -571,7 +704,11 @@
                 if (consecutiveStreak === 5 && !isReviewMode) {
                     checkpointIndex = currentQuestionIndex + 1;
                     consecutiveStreak = 0;
-                    setTimeout(() => showFeedback(`Checkpoint Reached! Progress saved at Q${checkpointIndex + 1}`, 'checkpoint'), 750);
+                    // Play checkpoint sound
+                    setTimeout(() => {
+                        playSound(checkpointSound);
+                        showFeedback(`Checkpoint Reached! Progress saved at Q${checkpointIndex + 1}`, 'checkpoint');
+                    }, 750);
                 }
                 
                 nextQuestionIndex = currentQuestionIndex + 1;
@@ -580,6 +717,9 @@
                 selectedBtn.classList.add('wrong');
                 totalWrong++;
                 consecutiveStreak = 0;
+                
+                // Play wrong sound
+                playSound(wrongSound);
                 
                 // Increment attempts for this specific question
                 questionAttempts[questionKey] = (questionAttempts[questionKey] || 0) + 1;
