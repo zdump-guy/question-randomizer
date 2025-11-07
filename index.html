@@ -213,6 +213,12 @@
 
             <div id="feedback-message" class="feedback text-center text-base sm:text-lg font-medium mt-4">
             </div>
+
+            <div id="skip-container" class="hidden text-center mt-4">
+                <button id="skip-button" class="py-2.5 px-6 rounded-lg font-semibold text-base transition-all" style="background: linear-gradient(180deg, #fbbf24, #f59e0b); color: #000; border: 1px solid #fbbf24;">
+                    Skip Question
+                </button>
+            </div>
         </div>
 
         <div id="results-container" class="hidden text-center">
@@ -222,6 +228,9 @@
                 and <span id="final-wrong" class="font-bold" style="color: #f87171;">0</span> wrong.
             </p>
             <div class="space-y-3 sm:space-y-4">
+                <button id="review-button" class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow hidden" style="background: linear-gradient(180deg, #f59e0b, #d97706); color: #000; border: 1px solid #fbbf24;">
+                    Review Your Mistakes
+                </button>
                 <button id="restart-button" class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow" style="background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border);">
                     Start Over
                 </button>
@@ -320,6 +329,9 @@
         const startButton = document.getElementById('start-button');
         const restartButton = document.getElementById('restart-button');
         const newFileButton = document.getElementById('new-file-button');
+        const reviewButton = document.getElementById('review-button');
+        const skipButton = document.getElementById('skip-button');
+        const skipContainer = document.getElementById('skip-container');
 
         const questionNumberSpan = document.getElementById('question-number');
         const totalQuestionsSpan = document.getElementById('total-questions');
@@ -348,6 +360,9 @@
         let totalCorrect = 0;
         let totalWrong = 0;
         let feedbackTimeout;
+        let questionAttempts = {};
+        let wrongQuestions = [];
+        let isReviewMode = false;
 
 
         csvFileInput.addEventListener('change', handleFile);
@@ -355,6 +370,8 @@
         answersGrid.addEventListener('click', handleAnswer);
         restartButton.addEventListener('click', startQuiz);
         newFileButton.addEventListener('click', resetToUpload);
+        reviewButton.addEventListener('click', startReviewMode);
+        skipButton.addEventListener('click', skipQuestion);
 
         showFilesBtn.addEventListener('click', () => {
             filesModal.classList.remove('hidden');
@@ -443,6 +460,10 @@
             consecutiveStreak = 0;
             totalCorrect = 0;
             totalWrong = 0;
+            questionAttempts = {};
+            wrongQuestions = [];
+            isReviewMode = false;
+            skipContainer.classList.add('hidden');
 
             shuffledQuestions = shuffleArray([...allQuestions]);
 
@@ -450,6 +471,30 @@
             updateStats();
             
             uploadContainer.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+
+            displayQuestion();
+        }
+
+        function startReviewMode() {
+            if (wrongQuestions.length === 0) return;
+
+            currentQuestionIndex = 0;
+            checkpointIndex = 0;
+            consecutiveStreak = 0;
+            totalCorrect = 0;
+            totalWrong = 0;
+            questionAttempts = {};
+            isReviewMode = true;
+            skipContainer.classList.add('hidden');
+
+            shuffledQuestions = [...wrongQuestions];
+            wrongQuestions = [];
+
+            totalQuestionsSpan.textContent = shuffledQuestions.length;
+            updateStats();
+            
             resultsContainer.classList.add('hidden');
             quizContainer.classList.remove('hidden');
 
@@ -465,6 +510,16 @@
             showFeedback('', null);
 
             const q = shuffledQuestions[currentQuestionIndex];
+            const questionKey = q.question;
+            const currentAttempts = questionAttempts[questionKey] || 0;
+
+            // Show skip button if this question has 4 or more attempts
+            if (currentAttempts >= 4) {
+                skipContainer.classList.remove('hidden');
+            } else {
+                skipContainer.classList.add('hidden');
+            }
+
             const correctAnswer = q.correct;
             const shuffledOptions = shuffleArray([...q.options]);
 
@@ -494,6 +549,8 @@
 
             const selectedBtn = e.target;
             const isCorrect = selectedBtn.dataset.correct === 'true';
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const questionKey = currentQuestion.question;
 
             let nextQuestionIndex = currentQuestionIndex;
             let feedbackDelay = 1500;
@@ -502,11 +559,18 @@
                 selectedBtn.classList.add('correct');
                 totalCorrect++;
                 consecutiveStreak++;
+                
+                // Clear attempts for this question when answered correctly
+                if (questionAttempts[questionKey]) {
+                    delete questionAttempts[questionKey];
+                }
+                
+                skipContainer.classList.add('hidden');
                 showFeedback('Correct!', 'correct');
 
-                if (consecutiveStreak === 5) {
+                if (consecutiveStreak === 5 && !isReviewMode) {
                     checkpointIndex = currentQuestionIndex + 1;
-                    consecutiveStreak = 0; // Reset streak
+                    consecutiveStreak = 0;
                     setTimeout(() => showFeedback(`Checkpoint Reached! Progress saved at Q${checkpointIndex + 1}`, 'checkpoint'), 750);
                 }
                 
@@ -516,6 +580,11 @@
                 selectedBtn.classList.add('wrong');
                 totalWrong++;
                 consecutiveStreak = 0;
+                
+                // Increment attempts for this specific question
+                questionAttempts[questionKey] = (questionAttempts[questionKey] || 0) + 1;
+                const currentAttempts = questionAttempts[questionKey];
+                
                 feedbackDelay = 3000;
 
                 const correctBtn = answersGrid.querySelector('[data-correct="true"]');
@@ -523,8 +592,24 @@
                     correctBtn.classList.add('correct');
                 }
 
-                showFeedback(`Wrong! Returning to checkpoint (Q${checkpointIndex + 1})`, 'wrong');
-                nextQuestionIndex = checkpointIndex;
+                // Track wrong question if not already tracked
+                const questionAlreadyTracked = wrongQuestions.some(q => q.question === currentQuestion.question);
+                if (!questionAlreadyTracked) {
+                    wrongQuestions.push({...currentQuestion});
+                }
+
+                // Show skip button after 4 attempts
+                if (currentAttempts >= 4) {
+                    skipContainer.classList.remove('hidden');
+                    showFeedback(`Wrong! You can skip this question or try again.`, 'wrong');
+                    nextQuestionIndex = currentQuestionIndex; // Stay on same question
+                } else if (isReviewMode) {
+                    showFeedback(`Wrong! Try again. (Attempt ${currentAttempts}/4)`, 'wrong');
+                    nextQuestionIndex = currentQuestionIndex;
+                } else {
+                    showFeedback(`Wrong! Returning to checkpoint (Q${checkpointIndex + 1})`, 'wrong');
+                    nextQuestionIndex = checkpointIndex;
+                }
             }
 
             updateStats();
@@ -535,12 +620,38 @@
             }, feedbackDelay);
         }
 
+        function skipQuestion() {
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
+            const questionKey = currentQuestion.question;
+            
+            // Clear attempts for this question
+            if (questionAttempts[questionKey]) {
+                delete questionAttempts[questionKey];
+            }
+            
+            skipContainer.classList.add('hidden');
+            currentQuestionIndex++;
+            showFeedback('Question skipped.', 'checkpoint');
+            
+            setTimeout(() => {
+                displayQuestion();
+            }, 1000);
+        }
+
         function endQuiz() {
             quizContainer.classList.add('hidden');
             resultsContainer.classList.remove('hidden');
             
             finalCorrectSpan.textContent = totalCorrect;
             finalWrongSpan.textContent = totalWrong;
+
+            // Show review button if there are wrong questions and not already in review mode
+            if (wrongQuestions.length > 0 && !isReviewMode) {
+                reviewButton.classList.remove('hidden');
+                reviewButton.textContent = `Review Your Mistakes (${wrongQuestions.length} questions)`;
+            } else {
+                reviewButton.classList.add('hidden');
+            }
         }
 
 
