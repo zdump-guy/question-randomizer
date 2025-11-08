@@ -11,225 +11,58 @@
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="manifest" href="favicon/site.webmanifest">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Roboto+Slab:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        :root{
-            --bg-900: #0f0f10;
-            --bg-800: #141416;
-            --bg-700: #1a1a1a;
-            --bg-600: #222224;
-            --bg-500: #2d2d2d;
-            --muted-400: #3a3a3a;
-            --muted-300: #4a4a4a;
-            --muted-200: #5b5b5b;
-            --text-100: #e6e6e6;
-            --text-80: #cfcfcf;
-            --accent-1: #6b7175;
-            --accent-2: #505356;
-            --glass: rgba(255,255,255,0.03);
-            --border: rgba(255,255,255,0.06);
-            --radius: 12px;
-            --mono-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-            --serif-font: 'Roboto Slab', serif;
-        }
-
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{
-            margin:0;
-            background:linear-gradient(180deg,var(--bg-900),var(--bg-800));
-            color:var(--text-100);
-            font-family:var(--mono-font);
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            padding:12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        @media (min-width: 640px) {
-            body {
-                padding: 24px;
-            }
-        }
-
-
-        .feedback {
-            transition: all 0.3s ease-in-out;
-            opacity: 0;
-            transform: translateY(10px);
-            height: 2rem;
-        }
-        .feedback.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .feedback.correct { color: #4ade80; }
-        .feedback.wrong { color: #f87171; }
-        .feedback.checkpoint { color: #60a5fa; }
-
-        .answer-btn.correct {
-            background: linear-gradient(180deg, rgba(74, 222, 128, 0.15), rgba(74, 222, 128, 0.1));
-            border-color: #4ade80;
-            color: #4ade80;
-            font-weight: 600;
-        }
-        .answer-btn.wrong {
-            background: linear-gradient(180deg, rgba(248, 113, 113, 0.15), rgba(248, 113, 113, 0.1));
-            border-color: #f87171;
-            color: #f87171;
-            font-weight: 600;
-        }
-        .answer-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        .footer {
-            margin-top: 2rem;
-            padding: 1rem;
-            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015));
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            text-align: center;
-            max-width: 42rem;
-            width: 100%;
-        }
-        @media (min-width: 640px) {
-            .footer {
-                padding: 1.5rem;
-            }
-        }
-        .footer h3 {
-            font-family: var(--serif-font);
-            font-weight: 600;
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
-            color: var(--text-100);
-        }
-        @media (min-width: 640px) {
-            .footer h3 {
-                font-size: 1.125rem;
-            }
-        }
-        .social-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-        @media (min-width: 640px) {
-            .social-links {
-                gap: 1rem;
-            }
-        }
-        .social-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 8px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
-            border: 1px solid var(--border);
-            color: var(--text-100);
-            text-decoration: none;
-            font-size: 0.813rem;
-            transition: all 0.2s ease;
-        }
-        @media (min-width: 640px) {
-            .social-link {
-                padding: 0.5rem 1rem;
-                font-size: 0.875rem;
-            }
-        }
-        .social-link:hover {
-            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.03));
-            border-color: var(--muted-300);
-            transform: translateY(-2px);
-        }
-
-        /* Ready Modal Styles */
-        .ready-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(8px);
-        }
-        .ready-modal.hidden {
-            display: none;
-        }
-        .ready-modal-content {
-            background: linear-gradient(180deg, var(--bg-700), var(--bg-800));
-            border: 2px solid var(--border);
-            border-radius: var(--radius);
-            padding: 2rem;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-        .ready-modal h2 {
-            font-family: var(--serif-font);
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--text-100);
-            margin: 0 0 1.5rem 0;
-        }
-        .ready-modal-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-        .ready-modal-btn {
-            padding: 0.75rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid var(--border);
-        }
-        .ready-modal-btn.yes {
-            background: linear-gradient(180deg, rgba(74, 222, 128, 0.2), rgba(74, 222, 128, 0.15));
-            color: #4ade80;
-            border-color: #4ade80;
-        }
-        .ready-modal-btn.yes:hover {
-            background: linear-gradient(180deg, rgba(74, 222, 128, 0.3), rgba(74, 222, 128, 0.25));
-            transform: translateY(-2px);
-        }
-        .ready-modal-btn.no {
-            background: linear-gradient(180deg, rgba(248, 113, 113, 0.2), rgba(248, 113, 113, 0.15));
-            color: #f87171;
-            border-color: #f87171;
-        }
-        .ready-modal-btn.no:hover {
-            background: linear-gradient(180deg, rgba(248, 113, 113, 0.3), rgba(248, 113, 113, 0.25));
-            transform: translateY(-2px);
-        }
-    </style>
 </head>
 <body>
+    
+    <!-- Loading Screen HTML -->
+    <div id="loading-screen" class="loading-screen-active">
+        <div class="loading-content">
+            <div class="brand-name">
+                <span class="letter">O</span>
+                <span class="letter">N</span>
+                <span class="letter">E</span>
+                <span class="letter-space"></span>
+                <span class="letter">V</span>
+                <span class="letter">O</span>
+                <span class="letter">X</span>
+                <span class="letter">E</span>
+                <span class="letter">L</span>
+            </div>
+            <div class="brand-tagline">
+                <span class="tagline-text">We craft ART, not just SOLUTIONS</span>
+            </div>
+            <div class="loading-progress">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Ready Modal -->
     <div id="ready-modal" class="ready-modal">
         <div class="ready-modal-content">
             <h2>Are You Ready?</h2>
+            <div class="mb-4 p-3 rounded-lg" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3);">
+                <p class="text-sm" style="color: #fbbf24;">⚠️ This quiz includes sound effects for feedback</p>
+            </div>
             <div class="ready-modal-buttons">
                 <button id="ready-yes-btn" class="ready-modal-btn yes">Yes</button>
                 <button id="ready-no-btn" class="ready-modal-btn no">No</button>
             </div>
         </div>
     </div>
+
+    <!-- Sound Toggle Button (Fixed Position) -->
+    <button id="sound-toggle-btn" class="hidden fixed top-4 right-4 z-50 p-3 rounded-full transition-all" style="background: rgba(26, 26, 26, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08);">
+        <svg id="sound-on-icon" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" style="color: #4ade80;">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+        </svg>
+        <svg id="sound-off-icon" class="hidden" width="24" height="24" fill="currentColor" viewBox="0 0 24 24" style="color: #f87171;">
+            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+        </svg>
+    </button>
 
     <main class="max-w-2xl w-full p-4 sm:p-6 md:p-8 rounded-xl transition-all" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
 
@@ -274,6 +107,9 @@
                     <span class="font-medium" style="color: #4ade80;">
                         Checkpoint: Q<span id="checkpoint-marker" class="font-bold">1</span>
                     </span>
+                    <span class="font-medium" style="color: #a78bfa;">
+                        Time: <span id="timer-display" class="font-bold">00:00</span>
+                    </span>
                 </div>
                 <div class="mt-2 sm:mt-3 pt-2 sm:pt-3 flex justify-center gap-4 sm:gap-6" style="border-top: 1px solid var(--border);">
                     <span class="font-medium">Correct: <span id="correct-count" class="font-bold" style="color: #4ade80;">0</span></span>
@@ -298,10 +134,38 @@
 
         <div id="results-container" class="hidden text-center">
             <h1 class="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4" style="color: var(--text-100); font-family: var(--serif-font);">Quiz Complete!</h1>
-            <p class="text-lg sm:text-xl mb-6 sm:mb-8" style="color: var(--text-80);">
+            <p class="text-lg sm:text-xl mb-4" style="color: var(--text-80);">
                 You got <span id="final-correct" class="font-bold" style="color: #4ade80;">0</span> right
                 and <span id="final-wrong" class="font-bold" style="color: #f87171;">0</span> wrong.
             </p>
+            
+            <!-- Timer Statistics -->
+            <div class="mb-6 p-4 rounded-lg" style="background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.015)); border: 1px solid var(--border);">
+                <h3 class="text-lg font-semibold mb-3" style="color: #a78bfa;">⏱️ Time Statistics</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                    <div class="p-3 rounded-lg" style="background: rgba(167, 139, 250, 0.1); border: 1px solid rgba(167, 139, 250, 0.2);">
+                        <div style="color: var(--text-80);">Total Time</div>
+                        <div id="final-total-time" class="text-xl font-bold" style="color: #a78bfa;">00:00</div>
+                    </div>
+                    <div class="p-3 rounded-lg" style="background: rgba(96, 165, 250, 0.1); border: 1px solid rgba(96, 165, 250, 0.2);">
+                        <div style="color: var(--text-80);">Avg per Question</div>
+                        <div id="final-avg-time" class="text-xl font-bold" style="color: #60a5fa;">0s</div>
+                    </div>
+                    <div class="p-3 rounded-lg" style="background: rgba(74, 222, 128, 0.1); border: 1px solid rgba(74, 222, 128, 0.2);">
+                        <div style="color: var(--text-80);">Questions Answered</div>
+                        <div id="final-questions-answered" class="text-xl font-bold" style="color: #4ade80;">0</div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Question Times -->
+                <div id="question-times-details" class="mt-4 p-3 rounded-lg max-h-48 overflow-y-auto" style="background: rgba(255,255,255,0.01); border: 1px solid var(--border);">
+                    <h4 class="text-sm font-semibold mb-2" style="color: var(--text-100);">Time per Question:</h4>
+                    <div id="question-times-list" class="text-xs space-y-1" style="color: var(--text-80);">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
             <div class="space-y-3 sm:space-y-4">
                 <button id="review-button" class="w-full py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg font-semibold text-base sm:text-lg transition-all shadow hidden" style="background: linear-gradient(180deg, #f59e0b, #d97706); color: #000; border: 1px solid #fbbf24;">
                     Review Your Mistakes
@@ -409,450 +273,13 @@
         </div>
     </footer>
 
-    <script>
-        const uploadContainer = document.getElementById('upload-container');
-        const quizContainer = document.getElementById('quiz-container');
-        const resultsContainer = document.getElementById('results-container');
-
-        const csvFileInput = document.getElementById('csv-file');
-        const startButton = document.getElementById('start-button');
-        const restartButton = document.getElementById('restart-button');
-        const newFileButton = document.getElementById('new-file-button');
-        const reviewButton = document.getElementById('review-button');
-        const skipButton = document.getElementById('skip-button');
-        const skipContainer = document.getElementById('skip-container');
-
-        // Audio elements
-        const openingSound = document.getElementById('opening-sound');
-        const correctSound = document.getElementById('correct-sound');
-        const wrongSound = document.getElementById('wrong-sound');
-        const checkpointSound = document.getElementById('checkpoint-sound');
-
-        const questionNumberSpan = document.getElementById('question-number');
-        const totalQuestionsSpan = document.getElementById('total-questions');
-        const streakCounterSpan = document.getElementById('streak-counter');
-        const checkpointMarkerSpan = document.getElementById('checkpoint-marker');
-        const correctCountSpan = document.getElementById('correct-count');
-        const wrongCountSpan = document.getElementById('wrong-count');
-
-        const questionText = document.getElementById('question-text');
-        const answersGrid = document.getElementById('answers-grid');
-        const feedbackMessage = document.getElementById('feedback-message');
-
-        const finalCorrectSpan = document.getElementById('final-correct');
-        const finalWrongSpan = document.getElementById('final-wrong');
-
-        const showFilesBtn = document.getElementById('show-files-btn');
-        const filesModal = document.getElementById('files-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const autoAddButtons = document.querySelectorAll('.auto-add-btn');
-
-        const readyModal = document.getElementById('ready-modal');
-        const readyYesBtn = document.getElementById('ready-yes-btn');
-        const readyNoBtn = document.getElementById('ready-no-btn');
-
-        let allQuestions = [];
-        let shuffledQuestions = [];
-        let currentQuestionIndex = 0;
-        let checkpointIndex = 0;
-        let consecutiveStreak = 0;
-        let totalCorrect = 0;
-        let totalWrong = 0;
-        let feedbackTimeout;
-        let questionAttempts = {};
-        let wrongQuestions = [];
-        let isReviewMode = false;
-        let uniqueCorrectQuestions = new Set(); // Track unique correctly answered questions
-        let uniqueWrongQuestions = new Set(); // Track unique wrongly answered questions
-
-        // Handle Ready Modal
-        readyYesBtn.addEventListener('click', () => {
-            readyModal.classList.add('hidden');
-            playSound(openingSound);
-        });
-
-        readyNoBtn.addEventListener('click', () => {
-            window.close();
-            // If window.close() doesn't work (modern browsers often block it),
-            // redirect to about:blank or show a message
-            setTimeout(() => {
-                window.location.href = 'about:blank';
-            }, 100);
-        });
-
-        // Show ready modal on page load
-        window.addEventListener('load', () => {
-            readyModal.classList.remove('hidden');
-        });
-
-        // Function to play sound
-        function playSound(audioElement) {
-            if (audioElement) {
-                audioElement.currentTime = 0;
-                audioElement.play().catch(err => {
-                    // Handle autoplay restrictions - sounds will play after user interaction
-                    console.log('Sound playback prevented:', err);
-                });
-            }
-        }
-
-
-        csvFileInput.addEventListener('change', handleFile);
-        startButton.addEventListener('click', startQuiz);
-        answersGrid.addEventListener('click', handleAnswer);
-        restartButton.addEventListener('click', startQuiz);
-        newFileButton.addEventListener('click', resetToUpload);
-        reviewButton.addEventListener('click', startReviewMode);
-        skipButton.addEventListener('click', skipQuestion);
-
-        showFilesBtn.addEventListener('click', () => {
-            filesModal.classList.remove('hidden');
-        });
-
-        closeModalBtn.addEventListener('click', () => {
-            filesModal.classList.add('hidden');
-        });
-
-        filesModal.addEventListener('click', (e) => {
-            if (e.target === filesModal) {
-                filesModal.classList.add('hidden');
-            }
-        });
-
-        autoAddButtons.forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const filePath = btn.dataset.file;
-                await loadCSVFile(filePath);
-                filesModal.classList.add('hidden');
-            });
-        });
-
-
-        async function loadCSVFile(filePath) {
-            try {
-                const response = await fetch(filePath);
-                const csvText = await response.text();
-                parseCSV(csvText);
-            } catch (error) {
-                console.error('Error loading CSV file:', error);
-                alert('Error loading the file. Please try downloading it instead.');
-            }
-        }
-
-        function handleFile(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                parseCSV(event.target.result);
-            };
-            reader.readAsText(file);
-            
-            startButton.disabled = false;
-            startButton.style.cssText = 'background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border); cursor: pointer;';
-        }
-
-        function parseCSV(csvText) {
-            allQuestions = [];
-            const lines = csvText.split('\n').filter(line => line.trim() !== '');
-
-            for (const line of lines) {
-                const parts = line.split(',');
-
-                if (parts.length === 6) {
-                    const [question, o1, o2, o3, o4, correct] = parts.map(s => s.trim().replace(/^"|"$/g, '')); // Basic quote stripping
-                    if (question && o1 && o2 && o3 && o4 && correct) {
-                        allQuestions.push({
-                            question,
-                            options: [o1, o2, o3, o4],
-                            correct
-                        });
-                    }
-                } else {
-                    console.warn('Skipping malformed line:', line);
-                }
-            }
-            
-            if (allQuestions.length > 0) {
-                startButton.disabled = false;
-                startButton.textContent = `Start Quiz (${allQuestions.length} Questions)`;
-                startButton.style.cssText = 'background: linear-gradient(180deg, var(--muted-300), var(--muted-200)); color: var(--text-100); border: 1px solid var(--border); cursor: pointer;';
-            } else {
-                startButton.disabled = true;
-                startButton.textContent = 'Invalid File Format';
-                startButton.style.cssText = 'background: var(--bg-600); color: var(--text-80); border: 1px solid var(--border); cursor: not-allowed; opacity: 0.5;';
-            }
-        }
-
-
-        function startQuiz() {
-            currentQuestionIndex = 0;
-            checkpointIndex = 0;
-            consecutiveStreak = 0;
-            totalCorrect = 0;
-            totalWrong = 0;
-            questionAttempts = {};
-            wrongQuestions = [];
-            isReviewMode = false;
-            skipContainer.classList.add('hidden');
-            uniqueCorrectQuestions.clear();
-            uniqueWrongQuestions.clear();
-
-            shuffledQuestions = shuffleArray([...allQuestions]);
-
-            totalQuestionsSpan.textContent = shuffledQuestions.length;
-            updateStats();
-            
-            uploadContainer.classList.add('hidden');
-            resultsContainer.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-
-            displayQuestion();
-        }
-
-        function startReviewMode() {
-            if (wrongQuestions.length === 0) return;
-
-            currentQuestionIndex = 0;
-            checkpointIndex = 0;
-            consecutiveStreak = 0;
-            totalCorrect = 0;
-            totalWrong = 0;
-            questionAttempts = {};
-            isReviewMode = true;
-            skipContainer.classList.add('hidden');
-            uniqueCorrectQuestions.clear();
-            uniqueWrongQuestions.clear();
-
-            shuffledQuestions = [...wrongQuestions];
-            wrongQuestions = [];
-
-            totalQuestionsSpan.textContent = shuffledQuestions.length;
-            updateStats();
-            
-            resultsContainer.classList.add('hidden');
-            quizContainer.classList.remove('hidden');
-
-            displayQuestion();
-        }
-
-        function displayQuestion() {
-            if (currentQuestionIndex >= shuffledQuestions.length) {
-                endQuiz();
-                return;
-            }
-
-            showFeedback('', null);
-
-            const q = shuffledQuestions[currentQuestionIndex];
-            const questionKey = q.question;
-            const currentAttempts = questionAttempts[questionKey] || 0;
-
-            // Show skip button if this question has 4 or more attempts
-            if (currentAttempts >= 4) {
-                skipContainer.classList.remove('hidden');
-            } else {
-                skipContainer.classList.add('hidden');
-            }
-
-            const correctAnswer = q.correct;
-            const shuffledOptions = shuffleArray([...q.options]);
-
-            questionText.textContent = q.question;
-            questionNumberSpan.textContent = currentQuestionIndex + 1;
-
-            answersGrid.innerHTML = '';
-            shuffledOptions.forEach(option => {
-                const button = document.createElement('button');
-                button.className = 'answer-btn w-full py-3 sm:py-4 px-4 sm:px-5 rounded-lg text-left text-base sm:text-lg focus:outline-none transition-all';
-                button.style.cssText = 'background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015)); border: 1px solid var(--border); color: var(--text-100); min-height: 48px;';
-                button.textContent = option;
-                button.dataset.answer = option;
-                
-                if (option === correctAnswer) {
-                    button.dataset.correct = 'true';
-                }
-                
-                answersGrid.appendChild(button);
-            });
-        }
-
-        function handleAnswer(e) {
-            if (!e.target.classList.contains('answer-btn')) return;
-
-            document.querySelectorAll('.answer-btn').forEach(btn => btn.disabled = true);
-
-            const selectedBtn = e.target;
-            const isCorrect = selectedBtn.dataset.correct === 'true';
-            const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            const questionKey = currentQuestion.question;
-
-            let nextQuestionIndex = currentQuestionIndex;
-            let feedbackDelay = 1500;
-
-            if (isCorrect) {
-                selectedBtn.classList.add('correct');
-                consecutiveStreak++;
-                
-                // Play correct sound
-                playSound(correctSound);
-                
-                // Track unique correct answer - only if never answered wrong
-                if (!uniqueWrongQuestions.has(questionKey) && !uniqueCorrectQuestions.has(questionKey)) {
-                    uniqueCorrectQuestions.add(questionKey);
-                    totalCorrect++;
-                }
-                
-                // Clear attempts for this question when answered correctly
-                if (questionAttempts[questionKey]) {
-                    delete questionAttempts[questionKey];
-                }
-                
-                skipContainer.classList.add('hidden');
-                showFeedback('Correct!', 'correct');
-
-                if (consecutiveStreak === 5 && !isReviewMode) {
-                    checkpointIndex = currentQuestionIndex + 1;
-                    consecutiveStreak = 0;
-                    // Play checkpoint sound
-                    setTimeout(() => {
-                        playSound(checkpointSound);
-                        showFeedback(`Checkpoint Reached! Progress saved at Q${checkpointIndex + 1}`, 'checkpoint');
-                    }, 750);
-                }
-                
-                nextQuestionIndex = currentQuestionIndex + 1;
-
-            } else {
-                selectedBtn.classList.add('wrong');
-                consecutiveStreak = 0;
-                
-                // Play wrong sound
-                playSound(wrongSound);
-                
-                // If this question was previously marked as correct, remove it
-                if (uniqueCorrectQuestions.has(questionKey)) {
-                    uniqueCorrectQuestions.delete(questionKey);
-                    totalCorrect--;
-                }
-                
-                // Track unique wrong answer
-                if (!uniqueWrongQuestions.has(questionKey)) {
-                    uniqueWrongQuestions.add(questionKey);
-                    totalWrong++;
-                }
-                
-                // Increment attempts for this specific question
-                questionAttempts[questionKey] = (questionAttempts[questionKey] || 0) + 1;
-                const currentAttempts = questionAttempts[questionKey];
-                
-                feedbackDelay = 3000;
-
-                const correctBtn = answersGrid.querySelector('[data-correct="true"]');
-                if (correctBtn) {
-                    correctBtn.classList.add('correct');
-                }
-
-                // Track wrong question if not already tracked
-                const questionAlreadyTracked = wrongQuestions.some(q => q.question === currentQuestion.question);
-                if (!questionAlreadyTracked) {
-                    wrongQuestions.push({...currentQuestion});
-                }
-
-                // Show skip button after 4 attempts
-                if (currentAttempts >= 3) {
-                    skipContainer.classList.remove('hidden');
-                    showFeedback(`Wrong! You can skip this question or try again.`, 'wrong');
-                    nextQuestionIndex = currentQuestionIndex; // Stay on same question
-                } else if (isReviewMode) {
-                    showFeedback(`Wrong! Try again. (Attempt ${currentAttempts}/4)`, 'wrong');
-                    nextQuestionIndex = currentQuestionIndex;
-                } else {
-                    showFeedback(`Wrong! Returning to checkpoint (Q${checkpointIndex + 1})`, 'wrong');
-                    nextQuestionIndex = checkpointIndex;
-                }
-            }
-
-            updateStats();
-
-            setTimeout(() => {
-                currentQuestionIndex = nextQuestionIndex;
-                displayQuestion();
-            }, feedbackDelay);
-        }
-
-        function skipQuestion() {
-            const currentQuestion = shuffledQuestions[currentQuestionIndex];
-            const questionKey = currentQuestion.question;
-            
-            // Clear attempts for this question
-            if (questionAttempts[questionKey]) {
-                delete questionAttempts[questionKey];
-            }
-            
-            skipContainer.classList.add('hidden');
-            currentQuestionIndex++;
-            showFeedback('Question skipped.', 'checkpoint');
-            
-            setTimeout(() => {
-                displayQuestion();
-            }, 1000);
-        }
-
-        function endQuiz() {
-            quizContainer.classList.add('hidden');
-            resultsContainer.classList.remove('hidden');
-            
-            finalCorrectSpan.textContent = totalCorrect;
-            finalWrongSpan.textContent = totalWrong;
-
-            // Show review button if there are wrong questions and not already in review mode
-            if (wrongQuestions.length > 0 && !isReviewMode) {
-                reviewButton.classList.remove('hidden');
-                reviewButton.textContent = `Review Your Mistakes (${wrongQuestions.length} questions)`;
-            } else {
-                reviewButton.classList.add('hidden');
-            }
-        }
-
-
-        function updateStats() {
-            streakCounterSpan.textContent = consecutiveStreak;
-            checkpointMarkerSpan.textContent = checkpointIndex + 1;
-            correctCountSpan.textContent = totalCorrect;
-            wrongCountSpan.textContent = totalWrong;
-        }
-
-        function showFeedback(message, type) {
-            if (feedbackTimeout) clearTimeout(feedbackTimeout);
-            
-            feedbackMessage.textContent = message;
-            feedbackMessage.className = `feedback ${type || ''}`;
-            
-            if (message) {
-                void feedbackMessage.offsetWidth; 
-                feedbackMessage.classList.add('show');
-            }
-        }
-
-        function resetToUpload() {
-            resultsContainer.classList.add('hidden');
-            uploadContainer.classList.remove('hidden');
-            
-            allQuestions = [];
-            csvFileInput.value = '';
-            startButton.disabled = true;
-            startButton.textContent = 'Start Quiz';
-        }
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
-        }
-    </script>
+    <!-- JavaScript Modules -->
+    <script src="js/loadingScreen.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/timer.js"></script>
+    <script src="js/fileHandler.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
