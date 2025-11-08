@@ -1,4 +1,4 @@
-# Question Randomizer - Quiz Application
+# Q&A Randomizer - Quiz Application
 
 A modern, feature-rich quiz application with sound effects, advanced timer tracking, checkpoint system, and modular JavaScript architecture. Built for an engaging and interactive learning experience.
 
