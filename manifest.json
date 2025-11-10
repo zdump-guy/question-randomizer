@@ -1,0 +1,38 @@
+{
+  "name": "One Voxel Q&A Randomizer",
+  "short_name": "OV Quiz",
+  "description": "Interactive Q&A Randomizer quiz platform by One Voxel. Upload CSV files and test your knowledge with our smart quiz system.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#1a1a1a",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "assets/favicon/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/favicon/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/favicon/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "screenshots": [
+    {
+      "src": "assets/preview.png",
+      "sizes": "1200x622",
+      "type": "image/png"
+    }
+  ]
+}
